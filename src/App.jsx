@@ -21,8 +21,31 @@ function App() {
   }, []);
 
   const resetGame = () => {
-    const shuffled = [...questions].sort(() => 0.5 - Math.random());
-    setCurrentQuestionIndices(shuffled);
+    const mathQs = questions.filter(q => q.category === 'Math');
+    const scienceQs = questions.filter(q => q.category === 'Science');
+    const animalQs = questions.filter(q => q.category === 'Animals');
+
+    const shuffleArray = (arr) => [...arr].sort(() => 0.5 - Math.random());
+    const shuffledMath = shuffleArray(mathQs);
+    const shuffledScience = shuffleArray(scienceQs);
+    const shuffledAnimal = shuffleArray(animalQs);
+
+    let selectedQs = [
+      ...shuffledMath.slice(0, 4),
+      ...shuffledScience.slice(0, 3),
+      ...shuffledAnimal.slice(0, 3)
+    ];
+
+    if (selectedQs.length < 10) {
+      selectedQs = [
+        ...selectedQs,
+        ...shuffledMath.slice(4, 4 + (10 - selectedQs.length))
+      ];
+    }
+
+    const finalShuffled = shuffleArray(selectedQs);
+
+    setCurrentQuestionIndices(finalShuffled);
     setQuestionIndex(0);
     setRopePosition(0);
     setCurrentTurn(1);
